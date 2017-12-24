@@ -10,7 +10,7 @@ class GameTable{ //Игровой стол
         this.playersName2 = null;
         this.start = false;
     }
-    //Метод 0 собираем инфу
+    //Метод 0 собираем инфу переведём в класс инит DOM
     static activateGame(){
         window.addEventListener('load', function () {
             console.log('Object Game Created');
@@ -20,11 +20,13 @@ class GameTable{ //Игровой стол
             newGame.activateElement();
         });
     }
+    //Активировать элементы
     activateElement(){
         let start = document.getElementById('start');
         start.addEventListener('click',this.collectGameSetting.bind(this));
         console.log('Elements Activated');
     }
+    //Collect and push in controller
     collectGameSetting(){
         let gameSetting = document.getElementById("game_settings");
         console.log(typeof gameSetting);
@@ -36,49 +38,26 @@ class GameTable{ //Игровой стол
         let size = this.data[3];
         let player_name = this.data[0];
         jQuery(gameSet).slideUp(1000,this.buildTable(size));
+        this.distributeData();
     }
-    //Метод 1 разворачиваем поле
+    //получили данные - теперь посмотрим как оно
     distributeData(){
         // this.data.split('');
         console.log(this.data);
-        console.log(typeof this.data.value);
+        console.log(typeof this.data);
     }
+    //Метод 1 разворачиваем поле
     buildTable(size){
-        // for(let i = 0; i < size*size; i++){
-        //     let table = document.getElementById('game_table');
-        //     let cell = document.createElement('div');
-        //     cell.setAttribute('value', '0');
-        //     cell.classList.add('table-cell');
-        //     table.appendChild(cell);
-        // }
-        console.log(this.data);
-        switch(size){
-            case '3':
-                for(let i = 0; i < size*size; i++){
-                    let table = document.getElementById('game_table');
-                    let cell = document.createElement('div');
-                    cell.setAttribute('value', '0');
-                    cell.classList.add('table-cell');
-                    table.appendChild(cell);
-                    } break;
-            case '5':
-                for(let i = 0; i < size*size; i++){
-                    let table = document.getElementById('game_table');
-                    let cell = document.createElement('div');
-                    cell.setAttribute('value', '0');
-                    cell.classList.add('table-cell-5');
-                    table.appendChild(cell);
-                } break;
-            case '10':
-                for(let i = 0; i < size*size; i++){
-                    let table = document.getElementById('game_table');
-                    let cell = document.createElement('div');
-                    cell.setAttribute('value', '0');
-                    cell.classList.add('table-cell-10');
-                    table.appendChild(cell);
-                } break;
+        for(let i = 0; i < size * size; i++){
+            let table = document.getElementById('game_table'); //table
+            let cell = document.createElement('div');// cell
+            let table_height = table.offsetHeight;
+            cell.setAttribute('value', '10');
+            cell.style.height = table_height / size + 'px';
+            cell.style.width = table_height / size + 'px';
+            cell.classList.add('table-cell');
+            table.appendChild(cell);
         }
-        this.openConsole(true);
     }
     //Метод 2 пресуем поле в массив 3 x 3 со значениями 0 , дальше значения будут -1 - крестик 1 - нолик
     openConsole(x){
