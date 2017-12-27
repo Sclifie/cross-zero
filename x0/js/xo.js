@@ -6,7 +6,7 @@ class TheGame{
         this.end = false; //когда становится true выдаётся сообщение о статусе
         //Метод взаимодействия с playerOfGame status в зависимоти от this.end
     }
-    [Symbol.iterator](){}
+
 }
 class PlayerOfGame{ // Конструктор игроков
     constructor(player_count,player_status){
@@ -26,16 +26,16 @@ class PlayerOfGame{ // Конструктор игроков
         }
         //Метод 3 Назначить крестик или нолик
 }
-class GameTable{ //Игровой стол
-    constructor(table_id,table_cell_id,how_many){
-        this.table = table_id; //id куда будем вставлять ячейки
-        this.cells = table_cell_id; //id что будем вставлять
-        this.many = how_many * how_many; // масштабируем игру к 2х2, 3х3, 4х4 и т.д.
-        this.tableArray = [[0,0,0],[0,0,0],[0,0,0]]; //для удобства
-    }
-    //Метод 1 разворачиваем поле
-    //Метод 2 пресуем поле в массив 3 x 3 со значениями 0 , дальше значения будут -1 - крестик 1 - нолик
-}
+// class GameTable{ //Игровой стол
+//     constructor(table_id,table_cell_id,how_many){
+//         this.table = table_id; //id куда будем вставлять ячейки
+//         this.cells = table_cell_id; //id что будем вставлять
+//         this.many = how_many * how_many; // масштабируем игру к 2х2, 3х3, 4х4 и т.д.
+//         this.tableArray = [[0,0,0],[0,0,0],[0,0,0]]; //для удобства
+//     }
+//     //Метод 1 разворачиваем поле
+//     //Метод 2 пресуем поле в массив 3 x 3 со значениями 0 , дальше значения будут -1 - крестик 1 - нолик
+// }
 class AI{ //ИИ
     constructor(x){
     this.inject = x;// если true вводит в игру ИИ

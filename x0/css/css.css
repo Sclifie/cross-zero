@@ -3,11 +3,13 @@
 .table{width: 500px; height: 500px; float: left; display: table; margin: 25px 0 25px;}
 .game-setting{display: block; margin: 0 0 0 25px; float: left;}
 .game-setting input{display: block; margin: 5px;}
-.table-cell{display: inline-block; float: left; position: relative;}
+.table-cell-empty{display: inline-block; float: left; position: relative;}
+.table-cell-cross{display: inline-block; float: left; position: relative; cursor: not-allowed;}
+.table-cell-o{}
 .table-cell-5{width: 89px;height: 89px; border: 1px black solid; display: inline-block; float: left; cursor: pointer; position: relative;}
 .table-cell-10{width: 43px;height: 43px; border: 1px black solid; display: inline-block; float: left; cursor: pointer; position: relative;}
-.table-cell:nth-child(2N){background: rgba(0,0,0, 0.1);}
-.game-status{width: 100%; height: 80px; display: block; margin: 25px auto 0; border: 1px solid black}
+.table-cell-empty:nth-child(2N){background: rgba(0,0,0, 0.1);}
+.game-status{width: 100%; height: 80px; display: block; margin: 25px auto 0; border: 1px solid black; vertical-align: top;}
 .round{max-width: 150px; max-height: 150px; background: url("../img/round.png") no-repeat; z-index: 100; display: block; position: absolute;}
 .cross{max-width: 150px; max-height: 150px; background: url("../img/cross.png") no-repeat; z-index: 100; display: block; position: absolute;}
 .hide{display: none;width: 1px;height: 1px; visibility: hidden;}
