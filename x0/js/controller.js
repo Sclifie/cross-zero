@@ -8,6 +8,7 @@ class GameTable{ //Игровой стол
         this.data = [];
         this.playersName1 = player_name;
         this.playersName2 = player_name2;
+        this.model = new TheGame();
     }
     //Метод 0 Активация игры класс инит DOM
     static activateGame(){
@@ -47,33 +48,85 @@ class GameTable{ //Игровой стол
     buildTable(size){
         console.log(this);
          //table
-        // let iter = 0;
+        let table = new Array(size);
         for(let i = 0; i < size * size; i++){
             // здесь будет if на clicked перестраивать поле будем с параметрами 0 1 и блочить его
-            // iter ++;
             let table = document.getElementById('game_table');
             let table_height = table.offsetHeight;
             let cell = document.createElement('div');// cell
-            cell.setAttribute('clicked', 'true');
-            cell.setAttribute('value', '10');
-            cell.setAttribute('name', 'cells'); /*+ iter*/
+            cell.setAttribute('data-clicked','true'); //кликабельность
+            cell.setAttribute('data-score', ''); //очки
+            cell.setAttribute('id', ""+(i+1)); // ид ячейчи
             cell.style.height = table_height / size + 'px';
             cell.style.width = table_height / size + 'px';
             cell.classList.add('table-cell-empty');
             table.appendChild(cell);
         }
+        // for (let i1 = 0; i1 < table.length; i1++){
+        //     table[i1] = new Array(size);
+        // }
+        // this.tableArray.push(table);
+        //      let cell_unique = document.getElementById(""+iter);
+        // let val = cell_unique.getAttribute('data-clicked');
+        // this.tableArray.push(val);
+        // console.log(val);
+        console.log(this.tableArray);
+        // this.tableArray.push()
         this.arrayCreate(size);
         //TODO: Итерацию передать в clickOn или поработать со строкой
         // передать iter
         // this.openConsole(true, size);
     }
     arrayCreate(size){
-        console.log(this);
-        let gameTable = document.getElementById("game_table");
-        let cells = gameTable.getElementsByTagName('*');
-        console.log(cells);
-        console.log(typeof cells.item(0));
-        // this.tableArray.push()
+        let array = [];
+        let iter = 1;
+        let arraySub = [];
+        let i = 0;
+        // for(; i <= size*size;i++){
+        //     let k = 0;
+        //     for(let k = 0; k < size;k++)
+        //     {
+        //     let cell_x = document.getElementById(""+i);
+        //     let val_x = cell_x.getAttribute('data-score');
+        //     array[iter].push(val_x);
+        //     i++;
+        //     }
+        //     iter+=size;
+        // }
+        while(i<=size*size){
+            let k=0;
+            for(;k<size;k++){
+                let cell_x = document.getElementById(""+i);
+                let val_x = cell_x.getAttribute('data-score');
+                arraySub.push(val_x);
+                i++;
+                console.log(i);
+            }
+            console.log(i);
+            array.push(arraySub);
+        }
+        console.log(array);
+        console.log(size);
+        // for(let y = 0; y < size; y++)
+        // {
+        //     for(let x = 0;x < size;x++){
+        //
+        //         console.log(subArr);
+        //         subArr.push(val_x);
+        //         console.log(subArr);
+        //     }
+        //     array.push(subArr);
+        //     console.log(array);
+        // }
+        // for(let i=0;i<size;i++){
+        //     let cell_y = document.getElementById(""+i*i);
+        //
+        //     for(i=0;i<size;i++){
+        //         let arr =
+        //         this.tableArray[];
+        //     }
+        //     this.tableArray.push(arr);
+        // }
     }
     clickOn(){
         console.log(this);
@@ -88,7 +141,7 @@ class GameTable{ //Игровой стол
             cell.classList.add('table-cell-cross');
             cell.removeEventListener('click');
         } else {
-            cell.classList.add('table-cell-zero')
+            cell.classList.add('table-cell-zero');
             cell.removeEventListener('click');
         }
     }
@@ -111,7 +164,7 @@ class GameTable{ //Игровой стол
         }
     }
 }
-class GameData{
+class GameStatus{
     constructor(number){
         this.howManyPlayers = number;
         this.player1Name = 'hello';

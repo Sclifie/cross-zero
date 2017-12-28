@@ -1,12 +1,11 @@
 'use strict';
 class TheGame{
     constructor(){
-        this.start = true; //пока тру - приступаем к созданию игры иначе выдаём сообщение, false принемает сразу после первого хода
-        this.round = true; //пока тру - будет проходить проверка поля
+        this.start = null; //пока тру - приступаем к созданию игры иначе выдаём сообщение, false принемает сразу после первого хода
+        this.round = 0; //пока тру - будет проходить проверка поля
         this.end = false; //когда становится true выдаётся сообщение о статусе
-        //Метод взаимодействия с playerOfGame status в зависимоти от this.end
+        this.table = [];//Метод взаимодействия с playerOfGame status в зависимоти от this.end
     }
-
 }
 class PlayerOfGame{ // Конструктор игроков
     constructor(player_count,player_status){
