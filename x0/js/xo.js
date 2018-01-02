@@ -5,6 +5,16 @@ class TheGame{
         this.round = 0; //пока тру - будет проходить проверка поля
         this.end = false; //когда становится true выдаётся сообщение о статусе
         this.table = [];//Метод взаимодействия с playerOfGame status в зависимоти от this.end
+        this.action = new GameAction();
+    }
+    set (start){if(start === false){return this.start = false} else {return this.start = true}}
+    startGame(){
+        console.log('Game Start?!');
+        if(this.start === false){
+            console.log("Игра не начата")
+        } else {
+            this.action.clickOn(true);
+        }
     }
 }
 class PlayerOfGame{ // Конструктор игроков
