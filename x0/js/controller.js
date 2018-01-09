@@ -1,51 +1,36 @@
 'use strict';
-class GameTable{ //Игровой стол
-    constructor(size,player_name, player_name2){
-        // this.table = null; //id куда будем вставлять ячейки
-        // this.cells = null; //id что будем вставлять
-        this.size = 0; // масштабируем игру к 2х2, 3х3, 4х4 и т.д. document.getElementById('table_size').value
-        this.tableArray = []; //для удобства
+//TODO: ИД ДАЛ ТЕПЕРЬ НАДО РИСОВАТЬ
+/// ИНИЦИАЛИЗАЦИЯ и действия мышкой
+class GameTable{ //Игровой стол настройки
+    constructor(){
+        this.table = document.getElementsByName('cells');
         this.data = [];
-        this.playersName1 = player_name;
-        this.playersName2 = player_name2;
-        this.model = new TheGame();
+        this.newGame = null; //сама игра
     }
-    //Метод 0 Активация игры класс инит DOM
-    static activateGame(){
-        window.addEventListener('load', this.createGame.bind(this));
-    }
-    static createGame() {
-        console.log('Object Game Created');
-        console.log('Current Setting');
-        console.log(this);
+    createGame() {
+        console.log('Window Active Wait Settings for create Game');
         this.activateElement();
     }
-    //Активировать элементы
-    static activateElement(){
-        console.log(this);
+    activateElement(){
         let start = document.getElementById('start');
         start.addEventListener('click',this.collectGameSetting.bind(this));
     }
-    //Collect and push in game
-    static collectGameSetting(){
-        let newGame = new GameTable();
-        console.log(this);
+    collectGameSetting(){
         let gameSetting = document.getElementById("game_settings");
         let gameSet = gameSetting.getElementsByTagName('*');
-        console.log(gameSet);
         for(let i = 0; i < 4;i++){
-            newGame.data.push(gameSet[i].value);
+            this.data.push(gameSet[i].value);
         }
-        let size = newGame.data[3];
-        newGame.size = newGame.data[3];
-        newGame.playersName1 = newGame.data[0];
-        newGame.playersName2 = newGame.data[1];
-        console.log(newGame.data);
-        jQuery(gameSet).slideUp(1000,newGame.buildTable(size));
+        let size = this.data[3];
+        console.log(this.data);
+        this.newGame = new TheGameController(this.data[0],this.data[1],this.data[2],this.data[3]);
+        this.newGame.setupModelTheGame();
+        console.log(this.newGame);
+        //Красотульки надо навести
+        jQuery(gameSet).slideUp(1000,this.buildTable(size));
     }
-
     buildTable(size){
-        console.log(this);
+        // console.log(this);
         for(let i = 0; i < size * size; i++){
             // здесь будет if на clicked перестраивать поле будем с параметрами 0 1 и блочить его
             let table = document.getElementById('game_table');
@@ -55,23 +40,22 @@ class GameTable{ //Игровой стол
             cell.score = 1; //очки ('data-score', '');
             cell.setAttribute('id', ""+(i+1)); // ид ячейчи
             cell.setAttribute('name','cells');
+            //cell.addEventListener('click', this.newGame.intercept.bind(this.newGame));
             cell.style.height = table_height / size + 'px';
             cell.style.width = table_height / size + 'px';
             cell.classList.add('table-cell-empty');
             table.appendChild(cell);
         }
-        console.log(this.tableArray);
+        // this.newGame.intercept();
         this.arrayCreate(size);
-        //TODO: Итерацию передать в clickOn или поработать со строкой
+        // console.log(this.tableArray);
+
     }
     arrayCreate(size){
         let y = 0;
-        let x=0;
         let array = [];
         let arraySub = [];
         for(let i= 1; i<size*size+1; i++){
-
-            console.log(i,i+1,x,y,arraySub,array);
             let cell_x = document.getElementById(""+(i));
             let val_x = cell_x.score;
             arraySub.push(val_x);
@@ -81,61 +65,108 @@ class GameTable{ //Игровой стол
                 arraySub = [];
             }
         }
-        this.model.table = array;
-        console.log(array);
-        console.log(size);
-        this.openConsole(true,size);
-        this.model.start = true;
+        this.newGame.model.table = array;
+    }
+}
+class TheGameController{
+    constructor(p_name0,p_name1,p_count,t_size){
+        this.data = [];
+        this.player_name0 = p_name0;
+        this.player_name1 = p_name1;
+        this.players_count = p_count;
+        this.table_size = t_size;
+        this.model = null;
+        this.status = null;
+    }
+    setupModelTheGame(){
+        this.model = new TheGame();
+        this.model.p_count = this.players_count;
+        this.model.p_names.push(this.player_name0,this.player_name1);
+        this.openConsole();
+        this.model.set(true);
         this.model.startGame();
     }
+    // intercept(){
+    //     let self = this;
+    //     // language=JQuery-CSS
+    //     jQuery('.table-cell-empty').click(function() {
+    //         let cell = jQuery(this).attr('id');
+    //         console.log('Тык', cell);
+    //         self.model.turnRound();
+    //     });
+    //
+    // }
+    openConsole(){
+        ConsoleOfTable.setupConsole('Игра создана, приятной игры', this.player_name0,this.player_name1,this.table_size);
+        this.status = new ConsoleOfTable();
+        this.status.openConsole(true);
+    }
 
-    openConsole(x,y){
-        if(x === true){
-            let console = document.getElementById('status');
-            console.classList.add();
-            let hours = new Date().getHours();
-            let min =  new Date().getMinutes();
-            let sec = new Date().getSeconds();
-            let time = hours + 'часов ' + min + 'минут ' + sec + 'сек :';
-            console.value = time + ' Здравствуйте ' + this.data[0] + " Тип игры : " + y + " на " + y;
-            let GameLogic = new TheGame();   /// Создали Логику
-            // this.clickOn(); // Активировали кликабельность
+}
+class Players {
+    constructor(p_name, p_mark) {
+        this.pname = p_name;
+        this.pmark = p_mark;
+        this.field = [];
+        this.cell = 0;
+        this.interceptor_counter = 0;
+    }
+
+    intercept() {
+        console.log(this);
+        let self = this;
+        jQuery('.table-cell-empty').click(() => { //function
+            console.log(this);
+            console.log(self);
+            let cell = jQuery(this).attr('id');
+            console.log('тык',cell);
+            self.cell = cell;
+            self.drawMark(self.mark);
+            console.log(self.cell);
+        });
+    }
+
+    drawMark(what_draw) {
+        if (what_draw === 'cross') {
+            document.getElementById("" + this.cell).classList.add('table-cell-cross');
+            document.getElementById("" + this.cell).classList.remove('table-cell-empty');
         } else {
-            let console = document.getElementById('status');
-            // console.log(console);
-            console.value = "Точное время" + " : " + x;
+            document.getElementById("" + this.cell).classList.add('table-cell-zero');
+            document.getElementById("" + this.cell).classList.remove('table-cell-empty');
         }
     }
 }
-class GameAction{
+class Round{
     constructor(){
-       this.status = 'ok';
-}
-    drawMark(){ console.log('крестик');}
-    clickOn(){
-        console.log(this);
-        let cell = document.getElementsByName('cells');
-        cell.forEach(this.drawMark().bind(this))
+        this.round = 0;
+
     }
-    //     if (mark === 'cross') {
-    //         item.classList.add('table-cell-cross');
+}
+
+    // this.interceptor();
+    // interceptorDrawer(mark){
+    //     jQuery(document).ready(function(){
+    //         jQuery('.table-cell-empty').click(function() {
+    //             this.cell = jQuery(this).attr('id');
+    //             console.log(this.cell);
+    //         });
+    //     });
+    //     if(mark === 'cross'){
+    //         document.getElementById(""+this.cell).classList.remove('table-cell-empty');
+    //         document.getElementById(""+this.cell).classList.add('table-cell-cross');
+    //         this.interceptor_counter++;
     //     } else {
-    //         item.classList.add('table-cell-zero');
+    //         document.getElementById(""+this.cell).classList.remove('table-cell-empty');
+    //         document.getElementById(""+this.cell).classList.add('table-cell-zero');
     //     }
     // }
-}
-class GameStatus{
-    constructor(number){
-        this.howManyPlayers = number;
-        this.player1Name = 'hello';
-        this.player2Name = 'hello';
-    }
-    set playerIterator(number){
 
-    }
-}
 
 (function() {
-    GameTable.activateGame();
+    function startGame() {
+        let gameTable = new GameTable(); // честно скажу запутался с последовательностью и переделал на упрощённый вариант
+        gameTable.createGame();
+        ConsoleOfTable.sayHello();
+    }
+    window.addEventListener('load', startGame);
 })();
-

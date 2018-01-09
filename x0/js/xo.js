@@ -1,40 +1,94 @@
 'use strict';
 class TheGame{
     constructor(){
-        this.start = null; //пока тру - приступаем к созданию игры иначе выдаём сообщение, false принемает сразу после первого хода
+        this.start = false; //пока тру - приступаем к созданию игры иначе выдаём сообщение, false принемает сразу после первого хода
         this.round = 0; //пока тру - будет проходить проверка поля
         this.end = false; //когда становится true выдаётся сообщение о статусе
         this.table = [];//Метод взаимодействия с playerOfGame status в зависимоти от this.end
-        this.action = new GameAction();
+        this.p_count = null; // здесь объект новой игр
+        this.status = null;
+        this.p_names = [];
+        console.log(this);
+    }
+    checkSettings(){
+        // console.log('settings', this.game);
+        console.log('say hello',this);
+        // this.startGame();
     }
     set (start){if(start === false){return this.start = false} else {return this.start = true}}
-    startGame(){
+    startGame(){  // Игроки
         console.log('Game Start?!');
         if(this.start === false){
             console.log("Игра не начата")
         } else {
-            this.action.clickOn(true);
+            console.log(this.p_count);
+            let random = Math.random();
+            let mark_0 = random < 0.5 ? 'cross' : 'zero';
+            let mark_1 = random >= 0.5 ? 'cross' : 'zero';
+            let turn = 1;
+            let any = 2;
+            if(random < 0.5){turn = 1; any = 2} else {any = 1; turn = 2}
+            // TheGameController.intercept();
+            switch(this.p_count){
+                case '0' : console.log('AI vs AI');
+                // let playerAi_0 = new AiPlayer(mark);
+                // let playerAi_1 = new AiPlayer(!mark);
+                break;
+                case '1' : console.log('PLAYER vs AI');
+                    // let playerAi_0 = new AiPlayer(mark);
+                    // let simple_player0 =  new Players(mark);
+                    console.log(mark_0,mark_1);
+                break;
+                case '2' : console.log('PLAYER VS PLAYER');
+                    console.log('Player 1',mark_0,'Player 2',mark_1);
+                            let simple_player0 =  new PlayersModel(this.p_names[0],mark_0,turn);
+                            console.log(simple_player0);
+                            simple_player0.youTurn();
+                            let simple_player1 =  new PlayersModel(this.p_names[1],mark_1,any);
+                            simple_player1.youTurn();
+                    console.log(simple_player1);
+                    this.turnRound();
+                break;
+            }
         }
+        }
+    turnRound(){
+        this.round++;
+        console.log("Текущий раунд",this.round);
     }
 }
-class PlayerOfGame{ // Конструктор игроков
-    constructor(player_count,player_status){
-        this.playerCounts = player_count; // количество игроков 0,1,2 0-играют 2 компа,1-комп vs player, 2 - player vs player
-        this.playerName = null; // пусто для имени
-        this.status = player_status; // 0 - его ход, 1 - ход опонента, -1 он проиграл
-        this.mark = null; // -1 - он крестик, 1 - он нолик
+class PlayersModel { // Конструктор игроков
+    constructor(p_name, mark, turn) {
+        this.playerName = p_name;
+        this.status = mark === 'cross'; // true - его ход, false - ход опонента
+        this.score = 0;
+        this.turn = turn;
+        this.mark = mark; // -1 - он крестик, 1 - он нолик
+        this.controller = new Players(p_name, mark)
     }
-        //Метод 1 задать имя
-        setName(){
-        this.playerName = prompt('Введите имя','somename');
-            return this.playerName;
-        }
-        //Метод 2 узнать состояние (строка 11)
-        setStatus(){
 
+    //Метод ход
+    youTurn() {
+        if (this.turn % 2 === 1) {
+            console.log(this.controller);
+            console.log('Ваш ход', this.playerName);
+            this.controller.intercept();
+            console.log('Контроллер из модели',this.controller);
+            this.turn++;
+
+        } else {
+            console.log('Контроллер из модели',this.controller);
+            console.log('НЕ ВАШ ХОД', this.playerName);
+            this.turn++;
         }
-        //Метод 3 Назначить крестик или нолик
+    }
 }
+        //Метод 2 узнать состояние
+        // setStatus(){
+        //
+        // }
+        //Метод 3 Назначить крестик или нолик
+
 // class GameTable{ //Игровой стол
 //     constructor(table_id,table_cell_id,how_many){
 //         this.table = table_id; //id куда будем вставлять ячейки
@@ -45,7 +99,7 @@ class PlayerOfGame{ // Конструктор игроков
 //     //Метод 1 разворачиваем поле
 //     //Метод 2 пресуем поле в массив 3 x 3 со значениями 0 , дальше значения будут -1 - крестик 1 - нолик
 // }
-class AI{ //ИИ
+class AiPlayer{ //AИ
     constructor(x){
     this.inject = x;// если true вводит в игру ИИ
     }
