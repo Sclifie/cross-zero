@@ -8,6 +8,7 @@ class TheGame{
         this.p_count = null; // здесь объект новой игр
         this.status = null;
         this.p_names = [];
+        this.players = [];
         console.log(this);
     }
     checkSettings(){
@@ -21,7 +22,6 @@ class TheGame{
         if(this.start === false){
             console.log("Игра не начата")
         } else {
-            console.log(this.p_count);
             let random = Math.random();
             let mark_0 = random < 0.5 ? 'cross' : 'zero';
             let mark_1 = random >= 0.5 ? 'cross' : 'zero';
@@ -42,20 +42,21 @@ class TheGame{
                 case '2' : console.log('PLAYER VS PLAYER');
                     console.log('Player 1',mark_0,'Player 2',mark_1);
                             let simple_player0 =  new PlayersModel(this.p_names[0],mark_0,turn);
-                            console.log(simple_player0);
-                            simple_player0.youTurn();
                             let simple_player1 =  new PlayersModel(this.p_names[1],mark_1,any);
-                            simple_player1.youTurn();
-                    console.log(simple_player1);
-                    this.turnRound();
+                            this.players.push(simple_player0,simple_player1);
+                    this.pullGame();
                 break;
             }
         }
         }
-    turnRound(){
-        this.round++;
-        console.log("Текущий раунд",this.round);
+    pullGame(){
+        //сюда проверку очков и конец игры
+        this.players[0].youTurn();
+        console.log(this.players[0]);
+        this.players[1].youTurn();
+        console.log(this.players[1]);
     }
+
 }
 class PlayersModel { // Конструктор игроков
     constructor(p_name, mark, turn) {
@@ -64,23 +65,14 @@ class PlayersModel { // Конструктор игроков
         this.score = 0;
         this.turn = turn;
         this.mark = mark; // -1 - он крестик, 1 - он нолик
-        this.controller = new Players(p_name, mark)
     }
 
     //Метод ход
     youTurn() {
         if (this.turn % 2 === 1) {
-            console.log(this.controller);
-            console.log('Ваш ход', this.playerName);
-            this.controller.intercept();
-            console.log('Контроллер из модели',this.controller);
-            this.turn++;
-
-        } else {
-            console.log('Контроллер из модели',this.controller);
-            console.log('НЕ ВАШ ХОД', this.playerName);
-            this.turn++;
+            console.log('Ваш ход', this.mark);
         }
+        this.turn++;
     }
 }
         //Метод 2 узнать состояние

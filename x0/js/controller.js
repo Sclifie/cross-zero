@@ -5,7 +5,7 @@ class GameTable{ //Игровой стол настройки
     constructor(){
         this.table = document.getElementsByName('cells');
         this.data = [];
-        this.newGame = null; //сама игра
+        this.newGame = null; //сама игра Контроллер
     }
     createGame() {
         console.log('Window Active Wait Settings for create Game');
@@ -46,6 +46,7 @@ class GameTable{ //Игровой стол настройки
             cell.classList.add('table-cell-empty');
             table.appendChild(cell);
         }
+        this.newGame.intercept();
         // this.newGame.intercept();
         this.arrayCreate(size);
         // console.log(this.tableArray);
@@ -66,6 +67,7 @@ class GameTable{ //Игровой стол настройки
             }
         }
         this.newGame.model.table = array;
+        console.log(this.newGame.model.table);
     }
 }
 class TheGameController{
@@ -75,8 +77,9 @@ class TheGameController{
         this.player_name1 = p_name1;
         this.players_count = p_count;
         this.table_size = t_size;
-        this.model = null;
+        this.model = null; //Модель
         this.status = null;
+        this.turn = 0;
     }
     setupModelTheGame(){
         this.model = new TheGame();
@@ -85,24 +88,51 @@ class TheGameController{
         this.openConsole();
         this.model.set(true);
         this.model.startGame();
+        this.cell = 0;
+        this.openConsole();
     }
-    // intercept(){
-    //     let self = this;
-    //     // language=JQuery-CSS
-    //     jQuery('.table-cell-empty').click(function() {
-    //         let cell = jQuery(this).attr('id');
-    //         console.log('Тык', cell);
-    //         self.model.turnRound();
-    //     });
-    //
-    // }
+    intercept(){
+        let self = this;
+        console.log(self);
+        // language=JQuery-CSS
+        jQuery('.table-cell-empty').click( function () //функцию оставил т.к. this не знаю у jQuery
+        {
+            let cellId = jQuery(this).attr('id');
+            let score = document.getElementById(""+cellId);
+            console.log('Тык', cellId);
+            //Сюда внедрение очков
+            console.log('Очки поля', score.score);
+            //сюда проверку кликабельности
+            console.log('Кликабельность',score.clicked);
+            //сюда перестроение поля очков
+            // self.model.turnRound();
+            self.drawMark(cellId);
+            self.cell = cellId;
+            self.model.pullGame();
+            self.turn++;
+        });
+        console.log('очки', this.cell.score);
+    }
+    drawMark(cell) {
+        if (this.turn % 2 === 1) {
+            document.getElementById("" + cell).classList.add('table-cell-cross');
+            document.getElementById("" + cell).classList.remove('table-cell-empty');
+        } else {
+            document.getElementById("" + cell).classList.add('table-cell-zero');
+            document.getElementById("" + cell).classList.remove('table-cell-empty');
+        }
+        this.status.writeInStatus();
+    }
     openConsole(){
-        ConsoleOfTable.setupConsole('Игра создана, приятной игры', this.player_name0,this.player_name1,this.table_size);
         this.status = new ConsoleOfTable();
+        this.status.setupConsole('Игра создана, приятной игры', this.player_name0,this.player_name1,this.table_size);
         this.status.openConsole(true);
     }
 
 }
+// class TheGameNew extends TheGame{
+//
+// }
 class Players {
     constructor(p_name, p_mark) {
         this.pname = p_name;
@@ -110,30 +140,6 @@ class Players {
         this.field = [];
         this.cell = 0;
         this.interceptor_counter = 0;
-    }
-
-    intercept() {
-        console.log(this);
-        let self = this;
-        jQuery('.table-cell-empty').click(() => { //function
-            console.log(this);
-            console.log(self);
-            let cell = jQuery(this).attr('id');
-            console.log('тык',cell);
-            self.cell = cell;
-            self.drawMark(self.mark);
-            console.log(self.cell);
-        });
-    }
-
-    drawMark(what_draw) {
-        if (what_draw === 'cross') {
-            document.getElementById("" + this.cell).classList.add('table-cell-cross');
-            document.getElementById("" + this.cell).classList.remove('table-cell-empty');
-        } else {
-            document.getElementById("" + this.cell).classList.add('table-cell-zero');
-            document.getElementById("" + this.cell).classList.remove('table-cell-empty');
-        }
     }
 }
 class Round{
